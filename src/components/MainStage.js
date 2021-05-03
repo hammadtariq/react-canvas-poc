@@ -105,7 +105,7 @@ const MainStage = (props) => {
     <div
       style={{
         position: "relative",
-        backgroundColor: "lightgrey",
+        // backgroundColor: "lightgrey",
         width: "100vw",
         height: "100vh",
       }}

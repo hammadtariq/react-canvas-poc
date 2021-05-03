@@ -1,13 +1,12 @@
 import { notification } from "antd";
 
-type toastObj = {
-  key: Number;
-  message: String;
-  description: String;
-  onClick: Function;
-};
-
-export const toastMessage = (type: String, description: String, title?: String, obj?: toastObj, onClick = () => {}) => {
+export const toastMessage = (
+  type,
+  description,
+  title,
+  obj,
+  onClick = () => {}
+) => {
   const object = obj || {
     key: 1,
     message: "",
