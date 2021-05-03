@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import React from "react";
 import { Stage, Layer } from "react-konva";
 import Section from "./Section";
@@ -10,7 +11,7 @@ const useFetch = (url) => {
   React.useEffect(() => {
     fetch(url)
       .then((res) => res.json())
-      .then((data) => setData(data));
+      .then((d) => setData(d));
   }, [url]);
   return data;
 };
@@ -42,7 +43,7 @@ const MainStage = (props) => {
     if (newSize.width !== size.width || newSize.height !== size.height) {
       setSize(newSize);
     }
-  });
+  }, [size]);
 
   // calculate initial scale
   React.useEffect(() => {
@@ -52,9 +53,9 @@ const MainStage = (props) => {
     const stage = stageRef.current;
     const clientRect = stage.getClientRect({ skipTransform: true });
 
-    const scaleToFit = size.width / clientRect.width;
-    setScale(scaleToFit);
-    setScaleToFit(scaleToFit);
+    const scaleFit = size.width / clientRect.width;
+    setScale(scaleFit);
+    setScaleToFit(scaleFit);
     setVirtualWidth(clientRect.width);
   }, [jsonData, size]);
 
@@ -71,7 +72,7 @@ const MainStage = (props) => {
 
   const handleHover = React.useCallback((seat, pos) => {
     setPopup({
-      seat: seat,
+      seat,
       position: pos,
     });
   }, []);
@@ -143,7 +144,7 @@ const MainStage = (props) => {
                 x={offset}
                 y={position}
                 height={height}
-                key={index}
+                key={section.name}
                 section={section}
                 selectedSeatsIds={selectedSeatsIds}
                 onHoverSeat={handleHover}
