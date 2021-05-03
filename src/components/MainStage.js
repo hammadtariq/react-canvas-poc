@@ -43,7 +43,7 @@ const MainStage = (props) => {
     if (newSize.width !== size.width || newSize.height !== size.height) {
       setSize(newSize);
     }
-  }, [size]);
+  }, [size.width, size.height]);
 
   // calculate initial scale
   React.useEffect(() => {
@@ -94,20 +94,61 @@ const MainStage = (props) => {
     [selectedSeatsIds]
   );
 
+  const handleDragBound = (pos) => {
+    pos.x = Math.min(
+      size.width / 2,
+      Math.max(pos.x, -virtualWidth * scale + size.width / 2)
+    );
+    pos.y = Math.min(size.height / 2, Math.max(pos.y, -size.height / 2));
+    return pos;
+  };
+
   if (jsonData === null) {
-    return <div ref={containerRef}>Loading...</div>;
+    return (
+      <div
+        ref={containerRef}
+        style={{
+          position: "relative",
+          height: "100vh",
+        }}
+      >
+        Loading...
+      </div>
+    );
   }
 
   const maxSectionWidth = layout.getMaximimSectionWidth(
     jsonData.seats.sections
   );
 
+  const renderSections = () => {
+    return jsonData.seats.sections.map((section) => {
+      const height = layout.getSectionHeight(section);
+      const position = lastSectionPosition + layout.SECTIONS_MARGIN;
+      lastSectionPosition = position + height;
+      const width = layout.getSectionWidth(section);
+      const offset = (maxSectionWidth - width) / 2;
+
+      return (
+        <Section
+          x={offset}
+          y={position}
+          height={height}
+          key={section.name}
+          section={section}
+          selectedSeatsIds={selectedSeatsIds}
+          onHoverSeat={handleHover}
+          onSelectSeat={handleSelect}
+          onDeselectSeat={handleDeselect}
+        />
+      );
+    });
+  };
+
   return (
     <div
       style={{
         position: "relative",
-        // backgroundColor: "lightgrey",
-        width: "100vw",
         height: "100vh",
       }}
       ref={containerRef}
@@ -116,44 +157,14 @@ const MainStage = (props) => {
         ref={stageRef}
         width={size.width}
         height={size.height}
-        draggable
-        dragBoundFunc={(pos) => {
-          pos.x = Math.min(
-            size.width / 2,
-            Math.max(pos.x, -virtualWidth * scale + size.width / 2)
-          );
-          pos.y = Math.min(size.height / 2, Math.max(pos.y, -size.height / 2));
-          return pos;
-        }}
+        draggable={false}
+        dragBoundFunc={handleDragBound}
         onDblTap={toggleScale}
         onDblClick={toggleScale}
         scaleX={scale}
         scaleY={scale}
       >
-        <Layer>
-          {jsonData.seats.sections.map((section, index) => {
-            const height = layout.getSectionHeight(section);
-            const position = lastSectionPosition + layout.SECTIONS_MARGIN;
-            lastSectionPosition = position + height;
-            const width = layout.getSectionWidth(section);
-
-            const offset = (maxSectionWidth - width) / 2;
-
-            return (
-              <Section
-                x={offset}
-                y={position}
-                height={height}
-                key={section.name}
-                section={section}
-                selectedSeatsIds={selectedSeatsIds}
-                onHoverSeat={handleHover}
-                onSelectSeat={handleSelect}
-                onDeselectSeat={handleDeselect}
-              />
-            );
-          })}
-        </Layer>
+        <Layer>{renderSections()}</Layer>
       </Stage>
       {/* draw popup as html */}
       {popup.seat && (
