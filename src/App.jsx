@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import { Layout, Menu } from 'antd';
-import MainStage from "./components/MainStage";
-import MenuBar from "./components/MenuBar";
+import { Layout } from 'antd';
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
 } from '@ant-design/icons';
 
+import MainStage from "./components/MainStage";
+import MenuBar from "./components/MenuBar";
+
 import "./styles/App.less";
-import RightDrawer from "./components/RightDrawer";
-import { isWhiteSpaceLike } from "typescript";
+
 
 const { Header, Sider, Content } = Layout;
 
@@ -51,8 +51,9 @@ function App() {
         </Content>
       </Layout>
       {/* Header and content code end */}
+
       <Sider className="right-sider">
-        {/* <RightDrawer /> */}
+        
       </Sider>
     </Layout>
    

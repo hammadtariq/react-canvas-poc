@@ -20,8 +20,8 @@ const instance = axios.create({
 
 // Add a response interceptor
 instance.interceptors.response.use(
-  (response: any) => response.data.data,
-  (error: any) => {
+  (response) => response.data.data,
+  (error) => {
     if (error.response) {
       if (error.response && error.response.status >= 400) {
         const errorObj = error.response.errors || "Something Went Wrong";
@@ -33,33 +33,45 @@ instance.interceptors.response.use(
     const err = error.msg ? error.msg : JSON.stringify(error);
     console.log("error===> ", error);
     return Promise.reject(err);
-  },
+  }
 );
-type ApiVersion = { apiVersion: String };
-const _getApiVersion = (params: ApiVersion = { apiVersion: "" }) => params.apiVersion || "";
+
+const _getApiVersion = (params = { apiVersion: "" }) => params.apiVersion || "";
 const _retryParams = (params = {}) => ({
   ...params,
-  validateStatus: (status: Number) => status < 400,
+  validateStatus: (status) => status < 400,
   retry: 4,
   retryDelay: 2000,
 });
 
-export function get(url: String, params: ApiVersion) {
+export function get(url, params) {
   return instance.get(`${_getApiVersion(params)}/${url}`, _retryParams(params));
 }
 
-export function post(url: String, body: Object, params: ApiVersion) {
-  return instance.post(`${_getApiVersion(params)}/${url}`, body, _retryParams(params));
+export function post(url, body, params) {
+  return instance.post(
+    `${_getApiVersion(params)}/${url}`,
+    body,
+    _retryParams(params)
+  );
 }
 
-export function put(url: String, body: Object, params: ApiVersion) {
-  return instance.put(`${_getApiVersion(params)}/${url}`, body, _retryParams(params));
+export function put(url, body, params) {
+  return instance.put(
+    `${_getApiVersion(params)}/${url}`,
+    body,
+    _retryParams(params)
+  );
 }
 
-export function patch(url: String, params: ApiVersion, body: Object) {
-  return instance.patch(`${_getApiVersion(params)}/${url}`, body || {}, _retryParams(params));
+export function patch(url, params, body) {
+  return instance.patch(
+    `${_getApiVersion(params)}/${url}`,
+    body || {},
+    _retryParams(params)
+  );
 }
 
-export function remove(url: String, params: ApiVersion, body: Object) {
+export function remove(url, params, body) {
   return instance.delete(`${_getApiVersion(params)}/${url}`, body || {});
 }
