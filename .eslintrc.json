@@ -38,8 +38,9 @@
     "react/no-array-index-key": 2,
     "react/prop-types": 1,
     "no-underscore-dangle": 0,
-    "react/react-in-jsx-scope": "off",
-    "react/jsx-props-no-spreading": "off",
+    "react/react-in-jsx-scope": 0,
+    "react/jsx-props-no-spreading": 0,
+    "react/require-default-props": 0,
     "react/jsx-filename-extension": [
       1,
       {

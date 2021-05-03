@@ -43,7 +43,7 @@ function App() {
         >
           <MainStage
             onSelectSeat={(seatId) => {
-              console.log("selected - " + seatId);
+              console.log(`selected - ${seatId}`);
             }}
           />
         </Content>

@@ -67,19 +67,19 @@ const SubSection = ({
   );
 };
 
-SubSection.defaultProps = {
-  onHoverSeat: () => {},
-  onSelectSeat: () => {},
-  onDeselectSeat: () => {},
-  selectedSeatsIds: () => {},
-  data: {
-    seats_by_rows: [],
-    name: "",
-  },
-  width: "",
-  x: "",
-  y: "",
-};
+// SubSection.defaultProps = {
+//   onHoverSeat: () => {},
+//   onSelectSeat: () => {},
+//   onDeselectSeat: () => {},
+//   selectedSeatsIds: () => {},
+//   data: {
+//     seats_by_rows: [],
+//     name: "",
+//   },
+//   width: "",
+//   x: "",
+//   y: "",
+// };
 
 SubSection.propTypes = {
   width: PropTypes.string,
