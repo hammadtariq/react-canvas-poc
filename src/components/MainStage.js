@@ -43,7 +43,7 @@ const MainStage = (props) => {
     if (newSize.width !== size.width || newSize.height !== size.height) {
       setSize(newSize);
     }
-  }, [size]);
+  });
 
   // calculate initial scale
   React.useEffect(() => {

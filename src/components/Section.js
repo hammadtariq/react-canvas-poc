@@ -1,5 +1,6 @@
 import React from "react";
 import { Rect, Group, Text } from "react-konva";
+import PropTypes from "prop-types";
 import SubSection from "./SubSection";
 
 import {
@@ -8,7 +9,7 @@ import {
   getSubsectionWidth,
 } from "./layout";
 
-export default React.memo(
+const Section = React.memo(
   ({
     section,
     height,
@@ -27,6 +28,7 @@ export default React.memo(
       containerRef.current.cache();
       containerRef.current.getLayer().batchDraw();
     }, [section, selectedSeatsIds]);
+
     const width = getSectionWidth(section);
     let lastSubsectionX = 0;
     return (
@@ -39,7 +41,7 @@ export default React.memo(
           stroke="lightgrey"
           cornerRadius={5}
         />
-        {section.subsections.map((subsection) => {
+        {section.subsections.map((subsection, index) => {
           const subWidth = getSubsectionWidth(subsection);
           const pos = lastSubsectionX;
           lastSubsectionX += subWidth;
@@ -48,7 +50,7 @@ export default React.memo(
             <SubSection
               x={pos}
               y={SECTION_TOP_PADDING}
-              key={subsection.name}
+              key={index}
               data={subsection}
               width={subWidth}
               height={height}
@@ -71,3 +73,20 @@ export default React.memo(
     );
   }
 );
+
+// Section.propTypes = {
+//   section: PropTypes.number,
+//   height: PropTypes.number,
+//   x: PropTypes.number,
+//   y: PropTypes.number,
+//   onHoverSeat: PropTypes.func,
+//   onSelectSeat: PropTypes.func,
+//   onDeselectSeat: PropTypes.func,
+//   selectedSeatsIds: PropTypes.array,
+//   data: PropTypes.shape({
+//     seats_by_rows: PropTypes.arrayOf(PropTypes.string),
+//     name: PropTypes.string,
+//   }),
+// };
+
+export default Section;
