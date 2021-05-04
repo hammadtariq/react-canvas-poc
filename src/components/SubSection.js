@@ -26,7 +26,7 @@ const SubSection = ({
             {row.map((seat, seatIndex) => {
               return (
                 <Seat
-                  key={seat.name}
+                  key={seatIndex}
                   x={seatIndex * SEATS_DISTANCE + SUBSECTION_PADDING}
                   y={rowIndex * SEATS_DISTANCE + SUBSECTION_PADDING}
                   data={seat}
@@ -81,18 +81,18 @@ const SubSection = ({
 //   y: "",
 // };
 
-SubSection.propTypes = {
-  width: PropTypes.string,
-  x: PropTypes.string,
-  y: PropTypes.string,
-  onHoverSeat: PropTypes.func,
-  onSelectSeat: PropTypes.func,
-  onDeselectSeat: PropTypes.func,
-  selectedSeatsIds: PropTypes.func,
-  data: PropTypes.shape({
-    seats_by_rows: PropTypes.arrayOf(PropTypes.string),
-    name: PropTypes.string,
-  }),
-};
+// SubSection.propTypes = {
+//   width: PropTypes.string,
+//   x: PropTypes.string,
+//   y: PropTypes.string,
+//   onHoverSeat: PropTypes.func,
+//   onSelectSeat: PropTypes.func,
+//   onDeselectSeat: PropTypes.func,
+//   selectedSeatsIds: PropTypes.func,
+//   data: PropTypes.shape({
+//     seats_by_rows: PropTypes.arrayOf(PropTypes.string),
+//     name: PropTypes.string,
+//   }),
+// };
 
 export default SubSection;
