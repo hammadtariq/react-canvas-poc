@@ -1,41 +1,33 @@
 /* eslint-disable no-param-reassign */
-import React from "react";
-import { Stage, Layer } from "react-konva";
+import React, { useEffect, useRef, useState, useCallback } from "react";
+import { Stage, Layer, Rect, Transformer } from "react-konva";
+import Konva from "konva";
+
 import Section from "./Section";
 import SeatPopup from "./SeatPopup";
-
 import * as layout from "./layout";
+import useFetch from "../hooks/useFetch";
 
-const useFetch = (url) => {
-  const [data, setData] = React.useState(null);
-  React.useEffect(() => {
-    fetch(url)
-      .then((res) => res.json())
-      .then((d) => setData(d));
-  }, [url]);
-  return data;
-};
-
-const MainStage = (props) => {
+const MainStage = () => {
   const jsonData = useFetch("./seats-data.json");
-  const containerRef = React.useRef(null);
-  const stageRef = React.useRef(null);
-
-  const [scale, setScale] = React.useState(1);
-  const [scaleToFit, setScaleToFit] = React.useState(1);
-  const [size, setSize] = React.useState({
+  const containerRef = useRef(null);
+  const stageRef = useRef(null);
+  const trRef = useRef(null);
+  const layerRef = useRef(null);
+  const selectionRectangleRef = useRef(null);
+  const [scale, setScale] = useState(1);
+  const [scaleToFit, setScaleToFit] = useState(1);
+  const [size, setSize] = useState({
     width: 1000,
     height: 1000,
     virtualWidth: 1000,
   });
-  const [virtualWidth, setVirtualWidth] = React.useState(1000);
-
-  const [selectedSeatsIds, setSelectedSeatsIds] = React.useState([]);
-
-  const [popup, setPopup] = React.useState({ seat: null });
+  const [virtualWidth, setVirtualWidth] = useState(1000);
+  const [selectedSeatsIds, setSelectedSeatsIds] = useState([]);
+  const [popup, setPopup] = useState({ seat: null });
 
   // calculate available space for drawing
-  React.useEffect(() => {
+  useEffect(() => {
     const newSize = {
       width: containerRef.current.offsetWidth,
       height: containerRef.current.offsetHeight,
@@ -45,22 +37,80 @@ const MainStage = (props) => {
     }
   }, [size.width, size.height]);
 
-  // calculate initial scale
-  React.useEffect(() => {
-    if (!stageRef.current) {
+  useEffect(() => {
+    if (
+      !stageRef.current ||
+      !layerRef.current ||
+      !selectionRectangleRef.current
+    ) {
       return;
     }
-    const stage = stageRef.current;
-    const clientRect = stage.getClientRect({ skipTransform: true });
 
-    const scaleFit = size.width / clientRect.width;
-    setScale(scaleFit);
-    setScaleToFit(scaleFit);
-    setVirtualWidth(clientRect.width);
+    let x1;
+    let y1;
+    let x2;
+    let y2;
+    const stage = stageRef.current;
+    const selectionRectangle = selectionRectangleRef.current;
+    const layer = layerRef.current;
+
+    stage.on("mousedown touchstart", (e) => {
+      // do nothing if we mousedown on any shape
+      // console.log("target", e.target, stageRef.current);
+      if (e.target !== stageRef.current) {
+        return;
+      }
+
+      x1 = stage.getPointerPosition().x;
+      y1 = stage.getPointerPosition().y;
+      x2 = stage.getPointerPosition().x;
+      y2 = stage.getPointerPosition().y;
+
+      selectionRectangle.visible(true);
+      selectionRectangle.width(0);
+      selectionRectangle.height(0);
+      layer.draw();
+    });
+
+    stage.on("mousemove touchmove", () => {
+      // no nothing if we didn't start selection
+      if (!selectionRectangle.visible()) {
+        return;
+      }
+      x2 = stage.getPointerPosition().x;
+      y2 = stage.getPointerPosition().y;
+      selectionRectangle.setAttrs({
+        x: Math.min(x1, x2),
+        y: Math.min(y1, y2),
+        width: Math.abs(x2 - x1),
+        height: Math.abs(y2 - y1),
+      });
+      layer.batchDraw();
+    });
+
+    stage.on("mouseup touchend", () => {
+      // no nothing if we didn't start selection
+      if (!selectionRectangle.visible()) {
+        return;
+      }
+      // update visibility in timeout, so we can check it in click event
+      setTimeout(() => {
+        selectionRectangle.visible(false);
+        layer.batchDraw();
+      });
+
+      const shapes = stage.find(".rect").toArray();
+      const box = selectionRectangle.getClientRect();
+      const selected = shapes.filter((shape) =>
+        Konva.Util.haveIntersection(box, shape.getClientRect())
+      );
+      trRef.current.nodes(selected);
+      layer.batchDraw();
+    });
   }, [jsonData, size]);
 
-  // togle scale on double clicks or taps
-  const toggleScale = React.useCallback(() => {
+  // toggle scale on double clicks or taps
+  const toggleScale = useCallback(() => {
     if (scale === 1) {
       setScale(scaleToFit);
     } else {
@@ -70,14 +120,14 @@ const MainStage = (props) => {
 
   let lastSectionPosition = 0;
 
-  const handleHover = React.useCallback((seat, pos) => {
+  const handleHover = useCallback((seat, pos) => {
     setPopup({
       seat,
       position: pos,
     });
   }, []);
 
-  const handleSelect = React.useCallback(
+  const handleSelect = useCallback(
     (seatId) => {
       const newIds = selectedSeatsIds.concat([seatId]);
       setSelectedSeatsIds(newIds);
@@ -85,7 +135,7 @@ const MainStage = (props) => {
     [selectedSeatsIds]
   );
 
-  const handleDeselect = React.useCallback(
+  const handleDeselect = useCallback(
     (seatId) => {
       const ids = selectedSeatsIds.slice();
       ids.splice(ids.indexOf(seatId), 1);
@@ -165,6 +215,14 @@ const MainStage = (props) => {
         scaleY={scale}
       >
         <Layer>{renderSections()}</Layer>
+        <Layer ref={layerRef}>
+          <Rect
+            fill="rgba(255,0,0,0.5)"
+            ref={selectionRectangleRef}
+            setZIndex={5}
+          />
+          <Transformer ref={trRef} />
+        </Layer>
       </Stage>
       {/* draw popup as html */}
       {popup.seat && (

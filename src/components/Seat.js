@@ -32,6 +32,8 @@ const Seat = (props) => {
       radius={SEAT_SIZE / 2}
       fill={getColor(isBooked, isSelected)}
       strokeWidth={1}
+      className="rect"
+      name="rect"
       onMouseEnter={(e) => {
         e.target._clearCache();
         onHover(data.name, e.target.getAbsolutePosition());
