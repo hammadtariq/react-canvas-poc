@@ -5,7 +5,7 @@ import Konva from "konva";
 
 import Section from "./Section";
 import SeatPopup from "./SeatPopup";
-import * as layout from "./layout";
+import * as layout from "./Layout";
 import useFetch from "../hooks/useFetch";
 
 const MainStage = () => {

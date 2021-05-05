@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Menu, Button } from "antd";
+import { Menu } from "antd";
 import { SelectOutlined } from "@ant-design/icons";
 
 import "../styles/components/MenuBar.less";
