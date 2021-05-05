@@ -4,6 +4,9 @@ import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 
 import MainStage from "./components/MainStage";
 import MenuBar from "./components/MenuBar";
+import Categories from "./components/Categories";
+import SeatsPosition from "./components/SeatsPosition";
+
 import "./styles/App.less";
 
 const { Header, Sider, Content } = Layout;
@@ -17,8 +20,10 @@ function App() {
 
   return (
     <Layout>
-      <Sider trigger={null} collapsible collapsed={!collapsed}>
-        <MenuBar />
+
+      {/* Side bar code start */}
+      <Sider className="left-sidebar" trigger={null} collapsible collapsed={!collapsed}>
+          <MenuBar />
       </Sider>
       <Layout className="site-layout">
         <Header className="site-layout-background" style={{ padding: 0 }}>
@@ -41,7 +46,12 @@ function App() {
           />
         </Content>
       </Layout>
-      <Sider className="right-sider" />
+      {/* Header and content code end */}
+
+      <Sider className="right-sider">
+        <SeatsPosition />
+        <Categories />
+      </Sider>
     </Layout>
   );
 }
