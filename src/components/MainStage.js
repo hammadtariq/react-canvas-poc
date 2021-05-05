@@ -232,6 +232,7 @@ const MainStage = () => {
       style={{
         position: "relative",
         height: "100vh",
+        padding: "15px 0 0 15px",
       }}
       ref={containerRef}
     >

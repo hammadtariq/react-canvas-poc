@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { Layout } from "antd";
+import { Layout, Row, Col } from "antd";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 
 import MainStage from "./components/MainStage";
 import MenuBar from "./components/MenuBar";
 import Categories from "./components/Categories";
 import SeatsPosition from "./components/SeatsPosition";
+import Actions from "./components/Actions";
 
 import "./styles/App.less";
 
@@ -30,32 +31,47 @@ function App() {
         <MenuBar />
       </Sider>
       <Layout className="site-layout">
-        <Header className="site-layout-background" style={{ padding: 0 }}>
-          {collapsed ? (
-            <MenuUnfoldOutlined className="trigger" onClick={toggle} />
-          ) : (
-            <MenuFoldOutlined className="trigger" onClick={toggle} />
-          )}
+        <Header className="site-layout-background">
+          <Row gutter={16}>
+            <Col className="gutter-row" span={12}>
+              {collapsed ? (
+                <MenuUnfoldOutlined className="trigger" onClick={toggle} />
+              ) : (
+                <MenuFoldOutlined className="trigger" onClick={toggle} />
+              )}
+              <h2>Tickets.com</h2>
+            </Col>
+          </Row>
         </Header>
         <Content
           style={{
-            margin: 15,
             overflow: "hidden",
           }}
         >
-          <MainStage
-            onSelectSeat={(seatId) => {
-              console.log(`selected - ${seatId}`);
-            }}
-          />
+          <Row gutter={16}>
+            <Col className="gutter-row" span={20}>
+              <MainStage
+                onSelectSeat={(seatId) => {
+                  // console.log(`selected - ${seatId}`);
+                }}
+              />
+            </Col>
+            <Col className="gutter-row right" span={4}>
+              <div className="right-sider">
+                <Actions />
+                <SeatsPosition />
+                <Categories />
+              </div>
+            </Col>
+          </Row>
         </Content>
       </Layout>
       {/* Header and content code end */}
 
-      <Sider className="right-sider">
+      {/* <Sider className="right-sider">
         <SeatsPosition />
         <Categories />
-      </Sider>
+      </Sider> */}
     </Layout>
   );
 }
