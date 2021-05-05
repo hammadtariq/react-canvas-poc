@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 
 import Seat from "./Seat";
 
-import { SEATS_DISTANCE, SUBSECTION_PADDING, SEAT_SIZE } from "./Layout";
+import { SEATS_DISTANCE, SUBSECTION_PADDING, SEAT_SIZE } from "../utils/layout";
 
 const SubSection = ({
   width,

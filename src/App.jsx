@@ -20,10 +20,14 @@ function App() {
 
   return (
     <Layout>
-
       {/* Side bar code start */}
-      <Sider className="left-sidebar" trigger={null} collapsible collapsed={!collapsed}>
-          <MenuBar />
+      <Sider
+        className="left-sidebar"
+        trigger={null}
+        collapsible
+        collapsed={!collapsed}
+      >
+        <MenuBar />
       </Sider>
       <Layout className="site-layout">
         <Header className="site-layout-background" style={{ padding: 0 }}>

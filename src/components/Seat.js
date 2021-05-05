@@ -1,6 +1,6 @@
 import React from "react";
 import { Circle } from "react-konva";
-import { SEAT_SIZE } from "./Layout";
+import { SEAT_SIZE } from "../utils/layout";
 
 function getColor(isBooked, isSelected) {
   if (isSelected) {

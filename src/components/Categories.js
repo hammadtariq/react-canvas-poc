@@ -30,52 +30,49 @@ const Categories = () => {
     },
   ]);
 
-  const addCategroy = () => {
+  const addCategory = () => {
     setData([
       ...data,
       { title: "New category", color: "black", isEditable: true },
     ]);
   };
 
-  const onhandlechange = (value, i, key) => {
-    key === "color"
-      ? setData([
-          ...data.slice(0, i),
-          { ...data[i], color: value },
-          ...data.slice(i + 1),
-        ])
-      : setData([
-          ...data.slice(0, i),
-          { ...data[i], title: value },
-          ...data.slice(i + 1),
-        ]);
+  const handleChange = (value, i, key) => {
+    if (["title", "color"].includes(key)) {
+      const updatedData = data.map((item, index) =>
+        index === i
+          ? {
+              ...item,
+              [key]: value,
+            }
+          : item
+      );
+      setData(updatedData);
+    }
   };
 
-  const onhandleBlur = (i) => {
-    setData([
-      ...data.slice(0, i),
-      { ...data[i], isEditable: false },
-      ...data.slice(i + 1),
-    ]);
+  const handleBlur = (i) => {
+    setData(
+      data.map((item, index) =>
+        index === i ? { ...item, isEditable: false } : item
+      )
+    );
   };
 
-  const onhandleEditDelete = ({ key }) => {
+  const handleEditDelete = ({ key }) => {
     if (key === "edit") {
-      setData([
-        ...data.slice(0, categoryIndex),
-        { ...data[categoryIndex], isEditable: true },
-        ...data.slice(categoryIndex + 1),
-      ]);
+      setData(
+        data.map((item, index) =>
+          index === categoryIndex ? { ...item, isEditable: true } : item
+        )
+      );
     } else {
-      setData([
-        ...data.slice(0, categoryIndex),
-        ...data.slice(categoryIndex + 1),
-      ]);
+      setData(data.filter((_, index) => index !== categoryIndex));
     }
   };
 
   const menu = (
-    <Menu onClick={onhandleEditDelete}>
+    <Menu onClick={handleEditDelete}>
       <Menu.Item key="edit">Edit</Menu.Item>
       <Menu.Item key="delete">Delete</Menu.Item>
     </Menu>
@@ -90,35 +87,29 @@ const Categories = () => {
         renderItem={(item, i) => (
           <List.Item>
             {!item.isEditable && (
-              <Fragment>
+              <>
                 <Badge color={item.color} count="00" />
                 <List.Item.Meta title={<a>{item.title}</a>} />
-                <Fragment>
-                  <Dropdown
-                    trigger="click"
-                    overlay={menu}
-                    placement="bottomLeft"
+                <Dropdown trigger="click" overlay={menu} placement="bottomLeft">
+                  <a
+                    className="ant-dropdown-link"
+                    onClick={() => {
+                      setIndex(i);
+                    }}
                   >
-                    <a
-                      className="ant-dropdown-link"
-                      onClick={() => {
-                        setIndex(i);
-                      }}
-                    >
-                      ...
-                    </a>
-                  </Dropdown>
-                </Fragment>
-              </Fragment>
+                    ...
+                  </a>
+                </Dropdown>
+              </>
             )}
             {item.isEditable && (
-              <Fragment>
+              <>
                 <Input
                   className="color-input"
                   type="color"
                   value={item.color}
                   onChange={(e) => {
-                    onhandlechange(e.target.value, i, "color");
+                    handleChange(e.target.value, i, "color");
                   }}
                 />
                 <Input
@@ -126,13 +117,13 @@ const Categories = () => {
                   placeholder="New category"
                   value={item.title}
                   onChange={(e) => {
-                    onhandlechange(e.target.value, i, "title");
+                    handleChange(e.target.value, i, "title");
                   }}
                   onBlur={(e) => {
-                    onhandleBlur(i);
+                    handleBlur(i);
                   }}
                 />
-              </Fragment>
+              </>
             )}
           </List.Item>
         )}
@@ -144,12 +135,12 @@ const Categories = () => {
           <List.Item>
             <List.Item.Meta
               title={
-                <a onClick={addCategroy}>
+                <a onClick={addCategory}>
                   <PlusCircleOutlined />
                   {item}
                 </a>
               }
-            ></List.Item.Meta>
+            />
           </List.Item>
         )}
       />
