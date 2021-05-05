@@ -7,6 +7,7 @@ import Section from "./Section";
 import SeatPopup from "./SeatPopup";
 import * as layout from "../utils/layout";
 import useFetch from "../hooks/useFetch";
+import usePosition from "../hooks/usePosition";
 
 const MainStage = () => {
   const jsonData = useFetch("./seats-data.json");
@@ -25,6 +26,7 @@ const MainStage = () => {
   const [virtualWidth, setVirtualWidth] = useState(1000);
   const [selectedSeatsIds, setSelectedSeatsIds] = useState([]);
   const [popup, setPopup] = useState({ seat: null });
+  const { positions, setPositions } = usePosition();
 
   // calculate available space for drawing
   useEffect(() => {
@@ -36,6 +38,29 @@ const MainStage = () => {
       setSize(newSize);
     }
   }, [size.width, size.height]);
+
+  let prevPosition = {
+    ...positions,
+  };
+  const constructPositionObject = (newPosition) => {
+    if (
+      (prevPosition.x === newPosition.x && prevPosition.y === newPosition.y) ||
+      (newPosition.x < 0 && newPosition.y < 0)
+    ) {
+      newPosition.x = 0;
+      newPosition.y = 0;
+      newPosition.width = 0;
+      newPosition.height = 0;
+    } else {
+      prevPosition = newPosition;
+    }
+    return {
+      x: Number.isNaN(newPosition.x) ? 0 : newPosition.x,
+      y: Number.isNaN(newPosition.y) ? 0 : newPosition.y,
+      width: Number.isNaN(newPosition.width) ? 0 : newPosition.width,
+      height: Number.isNaN(newPosition.height) ? 0 : newPosition.height,
+    };
+  };
 
   const attachSelectSeatsEvents = () => {
     if (
@@ -100,6 +125,7 @@ const MainStage = () => {
         Konva.Util.haveIntersection(box, shape.getClientRect())
       );
       trRef.current.nodes(selected);
+      setPositions(constructPositionObject(trRef.current.getClientRect()));
       layer.batchDraw();
     });
   };

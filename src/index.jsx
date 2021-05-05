@@ -1,11 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.less";
+import { Provider as PositionProvider } from "./context/PositionContext";
+
 import App from "./App";
+import "./index.less";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <PositionProvider>
+      <App />
+    </PositionProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );
