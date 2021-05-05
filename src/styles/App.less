@@ -27,11 +27,11 @@
 }
 
 .site-layout .site-layout-background .trigger {
-  padding: 0 24px;
   font-size: 18px;
-  line-height: 64px;
+  line-height: 55px;
   cursor: pointer;
   transition: color 0.3s;
+  padding-right: 15px;
 }
 
 .site-layout .site-layout-background .trigger:hover {
@@ -44,13 +44,33 @@
 
 .right-sider {
   background: white;
-  flex: 0 0 250px !important;
-  width: 250px !important;
-  min-width: 250px !important;
-  max-width: 250px !important;
-  padding: 65px 15px;
+  height: 100vh;
+  padding: 20px 15px;
+  h2 {
+    border-bottom: 1px solid #f0f0f0;
+    padding: 0 0 10px 0;
+    margin-bottom: 0;
+  }
 }
 
 .left-sidebar {
   padding-top: 60px;
+}
+
+.site-layout-background {
+  padding: 0 15px;
+  border-bottom: 1px solid #cdcdcd;
+  h2 {
+    display: inline-block;
+    font-size: 24px;
+    font-style: oblique;
+    margin-bottom: 0;
+  }
+  .right {
+    font-size: 18px;
+    text-align: right;
+  }
+  .anticon {
+    margin: 0 5px;
+  }
 }

@@ -9,23 +9,23 @@ const Categories = () => {
   const [categoryIndex, setIndex] = useState();
   const [data, setData] = useState([
     {
-      title: "Ant Design Title 1",
-      color: "green",
+      title: "Bronze",
+      color: "#cd7f32",
       isEditable: false,
     },
     {
-      title: "Ant Design Title 2",
-      color: "lime",
+      title: "Sliver",
+      color: "#C0C0C0",
       isEditable: false,
     },
     {
-      title: "Ant Design Title 3",
-      color: "cyan",
+      title: "Gold",
+      color: "#FFD700",
       isEditable: false,
     },
     {
-      title: "Ant Design Title 4",
-      color: "yellow",
+      title: "platinum",
+      color: "#E5E4E2",
       isEditable: false,
     },
   ]);
