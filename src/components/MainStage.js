@@ -37,14 +37,13 @@ const MainStage = () => {
     }
   }, [size.width, size.height]);
 
-  useEffect(() => {
+  const attachSelectSeatsEvents = () => {
     if (
       !stageRef.current ||
       !layerRef.current ||
       !selectionRectangleRef.current
-    ) {
+    )
       return;
-    }
 
     let x1;
     let y1;
@@ -57,9 +56,7 @@ const MainStage = () => {
     stage.on("mousedown touchstart", (e) => {
       // do nothing if we mousedown on any shape
       // console.log("target", e.target, stageRef.current);
-      if (e.target !== stageRef.current) {
-        return;
-      }
+      if (e.target !== stageRef.current) return;
 
       x1 = stage.getPointerPosition().x;
       y1 = stage.getPointerPosition().y;
@@ -74,9 +71,8 @@ const MainStage = () => {
 
     stage.on("mousemove touchmove", () => {
       // no nothing if we didn't start selection
-      if (!selectionRectangle.visible()) {
-        return;
-      }
+      if (!selectionRectangle.visible()) return;
+
       x2 = stage.getPointerPosition().x;
       y2 = stage.getPointerPosition().y;
       selectionRectangle.setAttrs({
@@ -90,9 +86,8 @@ const MainStage = () => {
 
     stage.on("mouseup touchend", () => {
       // no nothing if we didn't start selection
-      if (!selectionRectangle.visible()) {
-        return;
-      }
+      if (!selectionRectangle.visible()) return;
+
       // update visibility in timeout, so we can check it in click event
       setTimeout(() => {
         selectionRectangle.visible(false);
@@ -107,6 +102,17 @@ const MainStage = () => {
       trRef.current.nodes(selected);
       layer.batchDraw();
     });
+  };
+
+  useEffect(() => {
+    attachSelectSeatsEvents();
+    const stage = stageRef.current;
+    // eslint-disable-next-line consistent-return
+    return () => {
+      if (stage) {
+        stage.off("mousedown touchstart mousemove touchmove mouseup touchend");
+      }
+    };
   }, [jsonData, size]);
 
   // toggle scale on double clicks or taps
@@ -214,8 +220,8 @@ const MainStage = () => {
         scaleX={scale}
         scaleY={scale}
       >
-        <Layer>{renderSections()}</Layer>
         <Layer ref={layerRef}>
+          {renderSections()}
           <Rect
             fill="rgba(255,0,0,0.5)"
             ref={selectionRectangleRef}
