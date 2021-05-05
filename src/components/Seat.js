@@ -5,26 +5,38 @@ import { SEAT_SIZE } from "./Layout";
 function getColor(isBooked, isSelected) {
   if (isSelected) {
     return "red";
-  } else if (isBooked) {
-    return "lightgrey";
-  } else {
-    return "#1b728d";
   }
+  if (isBooked) {
+    return "lightgrey";
+  }
+  return "#1b728d";
 }
 
 const Seat = (props) => {
-  const isBooked = props.data.status === "booked";
+  const {
+    data,
+    x,
+    y,
+    onHover,
+    isSelected,
+    status,
+    onDeselect,
+    onSelect,
+  } = props;
+  const isBooked = data.status === "booked";
 
   return (
     <Circle
-      x={props.x}
-      y={props.y}
+      x={x}
+      y={y}
       radius={SEAT_SIZE / 2}
-      fill={getColor(isBooked, props.isSelected)}
+      fill={getColor(isBooked, isSelected)}
       strokeWidth={1}
+      className="rect"
+      name="rect"
       onMouseEnter={(e) => {
         e.target._clearCache();
-        props.onHover(props.data.name, e.target.getAbsolutePosition());
+        onHover(data.name, e.target.getAbsolutePosition());
         const container = e.target.getStage().container();
         if (isBooked) {
           container.style.cursor = "not-allowed";
@@ -33,7 +45,7 @@ const Seat = (props) => {
         }
       }}
       onMouseLeave={(e) => {
-        props.onHover(null);
+        onHover(null);
         const container = e.target.getStage().container();
         container.style.cursor = "";
       }}
@@ -41,20 +53,20 @@ const Seat = (props) => {
         if (isBooked) {
           return;
         }
-        if (props.isSelected) {
-          props.onDeselect(props.data.name);
+        if (isSelected) {
+          onDeselect(data.name);
         } else {
-          props.onSelect(props.data.name);
+          onSelect(data.name);
         }
       }}
       onTap={(e) => {
         if (isBooked) {
           return;
         }
-        if (props.isSelected) {
-          props.onDeselect(props.data.name);
+        if (isSelected) {
+          onDeselect(data.name);
         } else {
-          props.onSelect(props.data.name);
+          onSelect(data.name);
         }
       }}
     />
