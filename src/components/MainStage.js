@@ -3,7 +3,7 @@ import { Stage, Layer } from "react-konva";
 import Section from "./Section";
 import SeatPopup from "./SeatPopup";
 
-import * as layout from "./layout";
+import * as layout from "./Layout";
 
 const useFetch = (url) => {
   const [data, setData] = React.useState(null);

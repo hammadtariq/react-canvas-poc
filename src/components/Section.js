@@ -6,7 +6,7 @@ import {
   SECTION_TOP_PADDING,
   getSectionWidth,
   getSubsectionWidth,
-} from "./layout";
+} from "./Layout";
 
 export default React.memo(
   ({

@@ -2,7 +2,7 @@ import React from "react";
 import { Group, Text } from "react-konva";
 import Seat from "./Seat";
 
-import { SEATS_DISTANCE, SUBSECTION_PADDING, SEAT_SIZE } from "./layout";
+import { SEATS_DISTANCE, SUBSECTION_PADDING, SEAT_SIZE } from "./Layout";
 
 const SubSection = ({
   width,

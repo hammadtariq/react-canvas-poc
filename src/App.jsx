@@ -7,6 +7,8 @@ import {
 
 import MainStage from "./components/MainStage";
 import MenuBar from "./components/MenuBar";
+import Categories from "./components/Categories";
+import SeatsPosition from "./components/SeatsPosition";
 
 import "./styles/App.less";
 
@@ -25,7 +27,7 @@ function App() {
     <Layout>
 
       {/* Side bar code start */}
-      <Sider trigger={null} collapsible collapsed={!collapsed}>
+      <Sider className="left-sidebar" trigger={null} collapsible collapsed={!collapsed}>
           <MenuBar />
       </Sider>
       {/* Side bar code end */}
@@ -53,7 +55,8 @@ function App() {
       {/* Header and content code end */}
 
       <Sider className="right-sider">
-        
+        <SeatsPosition />
+        <Categories />
       </Sider>
     </Layout>
    
