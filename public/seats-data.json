@@ -4,7 +4,7 @@
       {
         "event_id": 2,
         "name": "Bronze",
-        "color": null,
+        "color": "#cd7f32",
         "subsections": [
           {
             "id": 18,
@@ -967,7 +967,7 @@
       {
         "event_id": 2,
         "name": "Silver",
-        "color": null,
+        "color": "#C0C0C0",
         "subsections": [
           {
             "id": 22,
@@ -1930,7 +1930,7 @@
       {
         "event_id": 2,
         "name": "Gold",
-        "color": null,
+        "color": "#FFD700",
         "subsections": [
           {
             "id": 26,
@@ -2893,7 +2893,7 @@
       {
         "event_id": 2,
         "name": "Platinum",
-        "color": null,
+        "color": "#E5E4E2",
         "subsections": [
           {
             "id": 30,

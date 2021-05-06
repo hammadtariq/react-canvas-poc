@@ -2,12 +2,12 @@ import React from "react";
 import { Circle } from "react-konva";
 import { SEAT_SIZE } from "../utils/layout";
 
-function getColor(isBooked, isSelected) {
+function getColor(isBooked, isSelected, sectionColor) {
   if (isSelected) {
     return "red";
   }
   if (isBooked) {
-    return "lightgrey";
+    return sectionColor;
   }
   return "#1b728d";
 }
@@ -22,6 +22,7 @@ const Seat = (props) => {
     status,
     onDeselect,
     onSelect,
+    sectionColor,
   } = props;
   const isBooked = data.status === "booked";
 
@@ -30,7 +31,7 @@ const Seat = (props) => {
       x={x}
       y={y}
       radius={SEAT_SIZE / 2}
-      fill={getColor(isBooked, isSelected)}
+      fill={getColor(isBooked, isSelected, sectionColor)}
       strokeWidth={1}
       className="rect"
       name="rect"

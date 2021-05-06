@@ -16,6 +16,7 @@ const SubSection = ({
   onSelectSeat,
   onDeselectSeat,
   selectedSeatsIds,
+  sectionColor,
 }) => {
   return (
     <Group x={x} y={y}>
@@ -34,6 +35,7 @@ const SubSection = ({
                   onSelect={onSelectSeat}
                   onDeselect={onDeselectSeat}
                   isSelected={selectedSeatsIds.indexOf(seat.name) >= 0}
+                  sectionColor={sectionColor}
                 />
               );
             })}

@@ -59,6 +59,7 @@ const Section = React.memo(
               onSelectSeat={onSelectSeat}
               onDeselectSeat={onDeselectSeat}
               selectedSeatsIds={selectedSeatsIds}
+              sectionColor={section.color}
             />
           );
         })}
