@@ -1,73 +1,54 @@
-import { Fragment, useState } from "react";
+import uniqId from "uniqid";
+import { Fragment, useContext, useState } from "react";
 import { List, Badge, Menu, Dropdown, Input } from "antd";
-import { PlusCircleOutlined, CheckOutlined } from "@ant-design/icons";
+import { PlusCircleOutlined } from "@ant-design/icons";
+import { Context as CategoriesContext } from "../context/CategoriesContext";
 
 import "../styles/components/Categories.less";
 
 const Categories = () => {
-  const data1 = ["Create new categories"];
-  const [categoryIndex, setIndex] = useState();
-  const [data, setData] = useState([
-    {
-      title: "Bronze",
-      color: "#cd7f32",
-      isEditable: false,
-    },
-    {
-      title: "Sliver",
-      color: "#C0C0C0",
-      isEditable: false,
-    },
-    {
-      title: "Gold",
-      color: "#FFD700",
-      isEditable: false,
-    },
-    {
-      title: "platinum",
-      color: "#E5E4E2",
-      isEditable: false,
-    },
-  ]);
+  const [activeCategoryId, setActiveCategoryId] = useState();
+  const { state, addCategory, setCategory, updateCategories } = useContext(
+    CategoriesContext
+  );
+  const { categories } = state;
 
-  const addCategory = () => {
-    setData([
-      ...data,
-      { title: "New category", color: "black", isEditable: true },
-    ]);
+  const handleAddCategory = () => {
+    const newCategory = {
+      id: uniqId(),
+      title: "",
+      color: "black",
+      isEditable: true,
+    };
+    addCategory(newCategory);
   };
 
-  const handleChange = (value, i, key) => {
+  const handleChange = (value, id, key) => {
     if (["title", "color"].includes(key)) {
-      const updatedData = data.map((item, index) =>
-        index === i
-          ? {
-              ...item,
-              [key]: value,
-            }
-          : item
+      const updatedCategories = categories.map((c) =>
+        c.id === id ? { ...c, [key]: value } : c
       );
-      setData(updatedData);
+      updateCategories(updatedCategories);
     }
   };
 
-  const handleBlur = (i) => {
-    setData(
-      data.map((item, index) =>
-        index === i ? { ...item, isEditable: false } : item
+  const handleBlur = (categoryId) => {
+    updateCategories(
+      categories.map((c) =>
+        c.id === categoryId ? { ...c, isEditable: false } : c
       )
     );
   };
 
   const handleEditDelete = ({ key }) => {
     if (key === "edit") {
-      setData(
-        data.map((item, index) =>
-          index === categoryIndex ? { ...item, isEditable: true } : item
+      updateCategories(
+        categories.map((c) =>
+          c.id === activeCategoryId ? { ...c, isEditable: true } : c
         )
       );
     } else {
-      setData(data.filter((_, index) => index !== categoryIndex));
+      updateCategories(categories.filter((c) => c.id !== activeCategoryId));
     }
   };
 
@@ -83,18 +64,18 @@ const Categories = () => {
       <h2>Categories</h2>
       <List
         itemLayout="horizontal"
-        dataSource={data}
-        renderItem={(item, i) => (
+        dataSource={categories}
+        renderItem={(category, i) => (
           <List.Item>
-            {!item.isEditable && (
+            {!category.isEditable && (
               <>
-                <Badge color={item.color} count="00" />
-                <List.Item.Meta title={<a>{item.title}</a>} />
+                <Badge color={category.color} count="00" />
+                <List.Item.Meta title={<a>{category.title}</a>} />
                 <Dropdown trigger="click" overlay={menu} placement="bottomLeft">
                   <a
                     className="ant-dropdown-link"
                     onClick={() => {
-                      setIndex(i);
+                      setActiveCategoryId(category.id);
                     }}
                   >
                     ...
@@ -102,25 +83,25 @@ const Categories = () => {
                 </Dropdown>
               </>
             )}
-            {item.isEditable && (
+            {category.isEditable && (
               <>
                 <Input
                   className="color-input"
                   type="color"
-                  value={item.color}
+                  value={category.color}
                   onChange={(e) => {
-                    handleChange(e.target.value, i, "color");
+                    handleChange(e.target.value, category.id, "color");
                   }}
                 />
                 <Input
                   type="text"
                   placeholder="New category"
-                  value={item.title}
+                  value={category.title}
                   onChange={(e) => {
-                    handleChange(e.target.value, i, "title");
+                    handleChange(e.target.value, category.id, "title");
                   }}
-                  onBlur={(e) => {
-                    handleBlur(i);
+                  onBlur={() => {
+                    handleBlur(category.id);
                   }}
                 />
               </>
@@ -130,12 +111,12 @@ const Categories = () => {
       />
       <List
         className="add-category"
-        dataSource={data1}
+        dataSource={["Create a new category"]}
         renderItem={(item) => (
           <List.Item>
             <List.Item.Meta
               title={
-                <a onClick={addCategory}>
+                <a onClick={handleAddCategory}>
                   <PlusCircleOutlined />
                   {item}
                 </a>
