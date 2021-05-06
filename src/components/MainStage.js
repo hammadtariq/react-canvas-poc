@@ -1,8 +1,16 @@
 /* eslint-disable no-param-reassign */
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+  useContext,
+} from "react";
 import { Stage, Layer, Rect, Transformer } from "react-konva";
 import Konva from "konva";
+import uniqId from "uniqid";
 
+import { Context as CategoriesContext } from "../context/CategoriesContext";
 import Section from "./Section";
 import SeatPopup from "./SeatPopup";
 import * as layout from "../utils/layout";
@@ -25,8 +33,11 @@ const MainStage = () => {
   });
   const [virtualWidth, setVirtualWidth] = useState(1000);
   const [selectedSeatsIds, setSelectedSeatsIds] = useState([]);
+  const [forceRerender, forceRerenderComponent] = useState(null);
   const [popup, setPopup] = useState({ seat: null });
   const { positions, setPositions } = usePosition();
+  const { state } = useContext(CategoriesContext);
+  const { activeCategory } = state;
 
   // calculate available space for drawing
   useEffect(() => {
@@ -131,6 +142,21 @@ const MainStage = () => {
   };
 
   useEffect(() => {
+    // re-run this effect on the change of categories selection,
+    // and change the color for selected seats that are in the state
+    const newNodes = [];
+    if (trRef.current) {
+      trRef.current.nodes().forEach((node) => {
+        node.setAttrs({
+          fill: activeCategory.color,
+        });
+      });
+      trRef.current.nodes(newNodes);
+      forceRerenderComponent(uniqId());
+    }
+  }, [activeCategory]);
+
+  useEffect(() => {
     attachSelectSeatsEvents();
     const stage = stageRef.current;
     // eslint-disable-next-line consistent-return
@@ -222,6 +248,7 @@ const MainStage = () => {
           onHoverSeat={handleHover}
           onSelectSeat={handleSelect}
           onDeselectSeat={handleDeselect}
+          forceRerender={forceRerender}
         />
       );
     });

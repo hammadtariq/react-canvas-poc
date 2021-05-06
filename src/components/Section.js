@@ -19,6 +19,7 @@ const Section = React.memo(
     onSelectSeat,
     onDeselectSeat,
     selectedSeatsIds,
+    forceRerender,
   }) => {
     const containerRef = React.useRef();
 
@@ -27,7 +28,7 @@ const Section = React.memo(
     React.useEffect(() => {
       containerRef.current.cache();
       containerRef.current.getLayer().batchDraw();
-    }, [section, selectedSeatsIds]);
+    }, [section, selectedSeatsIds, forceRerender]);
 
     const width = getSectionWidth(section);
     let lastSubsectionX = 0;

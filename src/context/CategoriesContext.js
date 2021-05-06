@@ -9,9 +9,8 @@ const categoryTypes = {
 };
 
 const initialState = {
-  activeCategoryName: "",
-  activeCategoryId: "",
   categories,
+  activeCategory: {},
   errorMessage: "",
 };
 
@@ -20,8 +19,12 @@ const positionReducer = (state, { type, payload }) => {
     case categoryTypes.SET_CATEGORY:
       return {
         ...state,
-        activeCategoryName: payload.categoryName,
-        activeCategoryId: payload.categoryId,
+        categories: state.categories.map((c) =>
+          c.id === payload
+            ? { ...c, isActive: true }
+            : { ...c, isActive: false }
+        ),
+        activeCategory: state.categories.find((c) => c.id === payload),
       };
     case categoryTypes.ADD_CATEGORY:
       return { ...state, categories: state.categories.concat(payload) };
@@ -41,10 +44,10 @@ const addCategory = (dispatch) => (newCategory) => {
   });
 };
 
-const setCategory = (dispatch) => (categoryName, categoryId) => {
+const setCategory = (dispatch) => (categoryId) => {
   dispatch({
     type: categoryTypes.SET_CATEGORY,
-    payload: { categoryName, categoryId },
+    payload: categoryId,
   });
 };
 

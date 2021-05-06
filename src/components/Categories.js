@@ -65,8 +65,11 @@ const Categories = () => {
       <List
         itemLayout="horizontal"
         dataSource={categories}
-        renderItem={(category, i) => (
-          <List.Item>
+        renderItem={(category) => (
+          <List.Item
+            onClick={() => setCategory(category.id)}
+            style={{ cursor: "pointer" }}
+          >
             {!category.isEditable && (
               <>
                 <Badge color={category.color} count="00" />
