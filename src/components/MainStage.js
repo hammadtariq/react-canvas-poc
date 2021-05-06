@@ -16,6 +16,7 @@ import SeatPopup from "./SeatPopup";
 import * as layout from "../utils/layout";
 import useFetch from "../hooks/useFetch";
 import usePosition from "../hooks/usePosition";
+import TestGrid from "./TestGrid";
 
 const MainStage = () => {
   const jsonData = useFetch("./seats-data.json");
@@ -283,6 +284,7 @@ const MainStage = () => {
           />
           <Transformer ref={trRef} />
         </Layer>
+        <TestGrid />
       </Stage>
       {/* draw popup as html */}
       {popup.seat && (
