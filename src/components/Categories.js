@@ -1,5 +1,5 @@
 import uniqId from "uniqid";
-import { Fragment, useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { List, Badge, Menu, Dropdown, Input } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { Context as CategoriesContext } from "../context/CategoriesContext";
@@ -72,7 +72,8 @@ const Categories = () => {
           >
             {!category.isEditable && (
               <>
-                <Badge color={category.color} count="00" />
+                <Badge color={category.color} count="" />
+                <List.Item.Meta title={<a>{category.title}</a>} />
                 <Dropdown trigger="click" overlay={menu} placement="bottomLeft">
                   <a
                     className="ant-dropdown-link"
