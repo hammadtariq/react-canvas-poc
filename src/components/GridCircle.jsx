@@ -18,7 +18,7 @@ const GridCircle = ({ transformData }) => {
       skewX={attrs.skew.x}
       skewY={attrs.skew.y}
       rotation={(attrs.rotation / Math.PI) * 180}
-      fill="red"
+      fill="transparent"
       strokeWidth={1}
       stroke="#000000"
     />
