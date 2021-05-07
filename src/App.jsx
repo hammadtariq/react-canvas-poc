@@ -8,6 +8,7 @@ import MenuBar from "./components/ToolBar";
 import Categories from "./components/Categories";
 import SeatsPosition from "./components/SeatsPosition";
 import Actions from "./components/Actions";
+import CreateSeatsTool from "./components/CreateSeatsTool";
 
 import "./styles/App.less";
 
@@ -51,7 +52,7 @@ function App() {
                   <MainStage />
                 </Route>
                 <Route path="/seats/new">
-                  <div>new component will work here</div>
+                  <CreateSeatsTool />
                 </Route>
               </Switch>
             </Col>

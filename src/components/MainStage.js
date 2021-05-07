@@ -11,27 +11,16 @@ import Konva from "konva";
 import uniqId from "uniqid";
 
 import { Context as CategoriesContext } from "../context/CategoriesContext";
+import { Context as ToolbarContext } from "../context/ToolbarContext";
 import Section from "./Section";
 import SeatPopup from "./SeatPopup";
 import * as layout from "../utils/layout";
 import useFetch from "../hooks/useFetch";
 import usePosition from "../hooks/usePosition";
-import TestGrid from "./TestGrid";
-import GridCircle from "./GridCircle";
-
-const generateMatrix = (xAxis = 30, yAxis = 30, width = 300, height = 600) => {
-  const temp = [];
-  for (let x = xAxis; x < width; x += 30) {
-    for (let y = yAxis; y < height; y += 30) {
-      temp.push(`0.9,0,0,0.9,${x},${y}`);
-    }
-  }
-  return temp;
-};
+import { TOOLS } from "../utils/constants";
 
 const MainStage = () => {
   const jsonData = useFetch("./seats-data.json");
-  const [circles, setCircles] = useState([]);
   const containerRef = useRef(null);
   const stageRef = useRef(null);
   const trRef = useRef(null);
@@ -39,18 +28,22 @@ const MainStage = () => {
   const selectionRectangleRef = useRef(null);
   const [scale, setScale] = useState(1);
   const [scaleToFit, setScaleToFit] = useState(1);
+  const [virtualWidth, setVirtualWidth] = useState(1000);
+  const [selectedSeatsIds, setSelectedSeatsIds] = useState([]);
+  const [forceRerender, forceRerenderComponent] = useState(null);
+  const [popup, setPopup] = useState({ seat: null });
   const [size, setSize] = useState({
     width: 1000,
     height: 1000,
     virtualWidth: 1000,
   });
-  const [virtualWidth, setVirtualWidth] = useState(1000);
-  const [selectedSeatsIds, setSelectedSeatsIds] = useState([]);
-  const [forceRerender, forceRerenderComponent] = useState(null);
-  const [popup, setPopup] = useState({ seat: null });
+
   const { positions, setPositions } = usePosition();
-  const { state } = useContext(CategoriesContext);
-  const { activeCategory } = state;
+  const { state: categoryState } = useContext(CategoriesContext);
+  const { state: toolbarState } = useContext(ToolbarContext);
+
+  const { activeCategory } = categoryState;
+  const { activeTool } = toolbarState;
 
   // calculate available space for drawing
   useEffect(() => {
@@ -104,7 +97,6 @@ const MainStage = () => {
 
     stage.on("mousedown touchstart", (e) => {
       // do nothing if we mousedown on any shape
-      // console.log("target", e.target, stageRef.current);
       if (e.target !== stageRef.current) return;
 
       x1 = stage.getPointerPosition().x;
@@ -135,10 +127,6 @@ const MainStage = () => {
         height,
       });
 
-      // const newCircles = generateMatrix(x, y, width, height);
-      // const updatedCircles = [...circles, ...newCircles];
-      // // console.log("UPDATED CIRCLES:: ", circles, updatedCircles);
-      // setCircles(updatedCircles);
       layer.batchDraw();
     });
 
@@ -177,7 +165,7 @@ const MainStage = () => {
   }, [activeCategory]);
 
   useEffect(() => {
-    attachSelectSeatsEvents();
+    if (activeTool === TOOLS.SELECTION) attachSelectSeatsEvents();
     const stage = stageRef.current;
     // eslint-disable-next-line consistent-return
     return () => {
@@ -185,7 +173,7 @@ const MainStage = () => {
         stage.off("mousedown touchstart mousemove touchmove mouseup touchend");
       }
     };
-  }, [jsonData, size]);
+  }, [jsonData, size, activeTool]);
 
   // toggle scale on double clicks or taps
   const toggleScale = useCallback(() => {
@@ -303,18 +291,7 @@ const MainStage = () => {
           />
           <Transformer ref={trRef} />
         </Layer>
-        {/* <TestGrid /> */}
-
-        {/* <Layer>
-          {circles.map(
-            (circle, i) => (
-              // circle.map((t) => {
-              <GridCircle transformData={circle} />
-            ) // })
-          )}
-        </Layer> */}
       </Stage>
-      {/* draw popup as html */}
       {popup.seat && (
         <SeatPopup
           position={popup.position}

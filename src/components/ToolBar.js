@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { Menu } from "antd";
 import { useLocation } from "react-router-dom";
 import { DotChartOutlined } from "@ant-design/icons";
@@ -6,25 +6,23 @@ import cursorIcon from "../images/cursor.svg";
 import ellipsisIcon from "../images/ellipsis.svg";
 
 import { Context as ToolbarContext } from "../context/ToolbarContext";
+import { TOOLS } from "../utils/constants";
 
 import "../styles/components/MenuBar.less";
-
-const TOOLS = {
-  SELECTION: "selection",
-  CREAT: "create",
-};
 
 const ToolBar = () => {
   const { SubMenu } = Menu;
   const { pathname } = useLocation();
+  const { state: toolbarState, setTool } = useContext(ToolbarContext);
+  const { activeTool } = toolbarState;
 
-  const { state, setTool } = useContext(ToolbarContext);
-
-  const handleChangeTool = (toolName) => () => setTool(toolName);
-
-  useEffect(() => {
-    console.log(state);
-  }, [state]);
+  const handleChangeTool = (toolName) => () => {
+    if (activeTool === toolName) {
+      setTool("");
+    } else {
+      setTool(toolName);
+    }
+  };
 
   return (
     <Menu
@@ -33,7 +31,11 @@ const ToolBar = () => {
       triggerSubMenuAction="click"
       className="menubar-container"
     >
-      <Menu.Item key="1" onClick={handleChangeTool(TOOLS.SELECTION)}>
+      <Menu.Item
+        key="1"
+        active={activeTool === TOOLS.SELECTION}
+        onClick={handleChangeTool(TOOLS.SELECTION)}
+      >
         <img src={cursorIcon} />
       </Menu.Item>
       {pathname === "/seats/new" && (
