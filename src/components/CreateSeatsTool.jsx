@@ -8,13 +8,21 @@ import usePosition from "../hooks/usePosition";
 import { TOOLS } from "../utils/constants";
 import GridCircle from "./GridCircle";
 
-const generateMatrix = (xAxis = 30, yAxis = 30, width = 300, height = 600) => {
+const generateMatrix = (xAxis, yAxis, width, height) => {
   const temp = [];
   for (let x = xAxis; x < width; x += 15) {
     for (let y = yAxis; y < height; y += 15) {
       // temp.push(`0.9,0,0,0.9,${x},${y}`);
       temp.push({ x, y });
     }
+  }
+  return temp;
+};
+
+const generateLinear = (xAxis = 30, yAxis = 30, width = 300, height = 600) => {
+  const temp = [];
+  for (let x = xAxis; x < width; x += 15) {
+    temp.push({ x, y: yAxis });
   }
   return temp;
 };
@@ -35,7 +43,7 @@ const CreateSeatsTool = () => {
 
   useEffect(() => {
     setExistingCircles([...existingCircles, ...circles]);
-    console.log("Circles::::", circles);
+    // console.log("Circles::::", circles);
   }, [circles]);
 
   let prevPosition = {
@@ -113,7 +121,10 @@ const CreateSeatsTool = () => {
         width,
         height,
       });
-      setCircles(generateMatrix(x, y, width, height));
+      console.log({ width, height });
+      setTimeout(() => {
+        setCircles(generateMatrix(x, y, width, height));
+      }, 50);
       layer.batchDraw();
     });
 
@@ -163,12 +174,14 @@ const CreateSeatsTool = () => {
     >
       <Stage ref={stageRef} width={2000} height={1000}>
         <Layer ref={layerRef}>
-          {circles.map((circle) => (
-            <GridCircle key={circle} transformData={circle} />
-          ))}
           {existingCircles.map((circle) => (
             <GridCircle transformData={circle} />
           ))}
+
+          {circles.map((circle) => (
+            <GridCircle key={circle} transformData={circle} />
+          ))}
+
           <Rect
             fill="rgba(173, 198, 255, 0.5)"
             ref={selectionRectangleRef}
