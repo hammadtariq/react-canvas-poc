@@ -22,13 +22,23 @@ const CreateSeatsTool = () => {
   const containerRef = useRef(null);
   const stageRef = useRef(null);
   const layerRef = useRef(null);
-  const selectionRectangleRef = useRef(null);
+  const selectionRectangleRef1 = useRef(null);
+  const selectionRectangleRef2 = useRef(null);
+  const selectionRectangleRef3 = useRef(null);
+  const selectionRectangleRef4 = useRef(null);
   const transformerRef = useRef(null);
-  const [circles, setCircles] = useState([]);
+  const [circles, setCircles] = useState(() => {
+    console.log("I'm running yar.. ");
+    return [];
+  });
   const { state: toolbarState } = useContext(ToolbarContext);
   const { positions, setPositions } = usePosition();
 
   const { activeTool } = toolbarState;
+
+  useEffect(() => {
+    console.log("Circles::::", circles);
+  }, [circles]);
 
   let prevPosition = {
     ...positions,
@@ -53,11 +63,18 @@ const CreateSeatsTool = () => {
     };
   };
 
+  const [rectangles, setRectangles] = useState({
+    rect1: null,
+    rect2: null,
+    rect3: null,
+    rect4: null,
+  });
+
   const attachSelectSeatsEvents = () => {
     if (
       !stageRef.current ||
       !layerRef.current ||
-      !selectionRectangleRef.current
+      !selectionRectangleRef1.current
     )
       return;
 
@@ -66,17 +83,26 @@ const CreateSeatsTool = () => {
     let x2;
     let y2;
     const stage = stageRef.current;
-    const selectionRectangle = selectionRectangleRef.current;
+    const selectionRectangle = selectionRectangleRef1.current;
     const layer = layerRef.current;
+    let touchStarted = false;
 
     stage.on("mousedown touchstart", (e) => {
       // do nothing if we mousedown on any shape
       if (e.target !== stageRef.current) return;
 
+      touchStarted = true;
+
       x1 = stage.getPointerPosition().x;
       y1 = stage.getPointerPosition().y;
       x2 = stage.getPointerPosition().x;
       y2 = stage.getPointerPosition().y;
+
+      const x = Math.min(x1, x2);
+      const y = Math.min(y1, y2);
+      const width = Math.abs(x2 - x1);
+      const height = Math.abs(y2 - y1);
+      // setCircles([...circles, ...generateMatrix(x, y, width, height)]);
 
       selectionRectangle.visible(true);
       selectionRectangle.width(0);
@@ -115,6 +141,13 @@ const CreateSeatsTool = () => {
         layer.batchDraw();
       });
 
+      setRectangles({
+        ...rectangles,
+        rect1: circles,
+      });
+
+      setCircles([]);
+
       // const shapes = stage.find(".rect").toArray();
       // const box = selectionRectangle.getClientRect();
       // const selected = shapes.filter((shape) =>
@@ -148,17 +181,23 @@ const CreateSeatsTool = () => {
       }}
       ref={containerRef}
     >
+      {/*  { ref: useRef(),  } */}
       <Stage ref={stageRef} width={2000} height={1000}>
         <Layer ref={layerRef}>
           {circles.map((circle) => (
             <GridCircle transformData={circle} />
           ))}
+
+          {rectangles.rect1 &&
+            rectangles.rect1.circles.map((circle) => (
+              <GridCircle transformData={circle} />
+            ))}
           <Rect
             fill="rgba(173, 198, 255, 0.5)"
-            ref={selectionRectangleRef}
+            ref={selectionRectangleRef1}
             setZIndex={5}
           />
-          <Transformer ref={transformerRef} />
+          {/* <Transformer ref={transformerRef} /> */}
         </Layer>
       </Stage>
     </div>
