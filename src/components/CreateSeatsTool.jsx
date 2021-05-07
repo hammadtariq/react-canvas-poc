@@ -10,8 +10,8 @@ import GridCircle from "./GridCircle";
 
 const generateMatrix = (xAxis = 30, yAxis = 30, width = 300, height = 600) => {
   const temp = [];
-  for (let x = xAxis; x < width; x += 30) {
-    for (let y = yAxis; y < height; y += 30) {
+  for (let x = xAxis; x < width; x += 15) {
+    for (let y = yAxis; y < height; y += 15) {
       temp.push(`0.9,0,0,0.9,${x},${y}`);
     }
   }
@@ -124,20 +124,19 @@ const CreateSeatsTool = () => {
       setTimeout(() => {
         selectionRectangle.visible(false);
         layer.batchDraw();
+        setCircles([]);
       });
 
-      // setCircles([]);
-
-      const shapes = stage.find(".rect").toArray();
-      const box = selectionRectangle.getClientRect();
-      const selected = shapes.filter((shape) =>
-        Konva.Util.haveIntersection(box, shape.getClientRect())
-      );
-      transformerRef.current.nodes(selected);
-      setPositions(
-        constructPositionObject(transformerRef.current.getClientRect())
-      );
-      layer.batchDraw();
+      // const shapes = stage.find(".rect").toArray();
+      // const box = selectionRectangle.getClientRect();
+      // const selected = shapes.filter((shape) =>
+      //   Konva.Util.haveIntersection(box, shape.getClientRect())
+      // );
+      // transformerRef.current.nodes(selected);
+      // setPositions(
+      //   constructPositionObject(transformerRef.current.getClientRect())
+      // );
+      // layer.batchDraw();
     });
   };
 

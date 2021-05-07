@@ -9,8 +9,8 @@ const GridCircle = ({ transformData }) => {
 
   return (
     <Circle
-      width="20"
-      height="20"
+      width="10"
+      height="10"
       x={attrs.position.x}
       y={attrs.position.y}
       scaleX={attrs.scale.x}
