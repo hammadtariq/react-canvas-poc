@@ -1,14 +1,30 @@
+import { useContext, useEffect } from "react";
 import { Menu } from "antd";
 import { useLocation } from "react-router-dom";
 import { DotChartOutlined } from "@ant-design/icons";
 import cursorIcon from "../images/cursor.svg";
 import ellipsisIcon from "../images/ellipsis.svg";
 
+import { Context as ToolbarContext } from "../context/ToolbarContext";
+
 import "../styles/components/MenuBar.less";
 
-const MenuBar = () => {
+const TOOLS = {
+  SELECTION: "selection",
+  CREAT: "create",
+};
+
+const ToolBar = () => {
   const { SubMenu } = Menu;
   const { pathname } = useLocation();
+
+  const { state, setTool } = useContext(ToolbarContext);
+
+  const handleChangeTool = (toolName) => () => setTool(toolName);
+
+  useEffect(() => {
+    console.log(state);
+  }, [state]);
 
   return (
     <Menu
@@ -17,13 +33,15 @@ const MenuBar = () => {
       triggerSubMenuAction="click"
       className="menubar-container"
     >
-      {pathname === "/" && (
-        <Menu.Item key="1">
-          <img src={cursorIcon} />
-        </Menu.Item>
-      )}
+      <Menu.Item key="1" onClick={handleChangeTool(TOOLS.SELECTION)}>
+        <img src={cursorIcon} />
+      </Menu.Item>
       {pathname === "/seats/new" && (
-        <SubMenu key="sub1" title={<img src={ellipsisIcon} />}>
+        <SubMenu
+          key="sub1"
+          title={<img src={ellipsisIcon} />}
+          onClick={handleChangeTool(TOOLS.CREAT)}
+        >
           <Menu.Item key="2">
             <img src={ellipsisIcon} />
           </Menu.Item>
@@ -36,4 +54,4 @@ const MenuBar = () => {
   );
 };
 
-export default MenuBar;
+export default ToolBar;

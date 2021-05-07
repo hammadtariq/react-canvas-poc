@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { Layout, Row, Col } from "antd";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-
+import { Switch, Route } from "react-router-dom";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 
 import MainStage from "./components/MainStage";
-import MenuBar from "./components/MenuBar";
+import MenuBar from "./components/ToolBar";
 import Categories from "./components/Categories";
 import SeatsPosition from "./components/SeatsPosition";
 import Actions from "./components/Actions";
@@ -23,7 +22,6 @@ function App() {
 
   return (
     <Layout>
-      {/* Side bar code start */}
       <Sider
         className="left-sidebar"
         trigger={null}
@@ -45,20 +43,12 @@ function App() {
             </Col>
           </Row>
         </Header>
-        <Content
-          style={{
-            overflow: "hidden",
-          }}
-        >
+        <Content style={{ overflow: "hidden" }}>
           <Row gutter={16}>
             <Col className="gutter-row" span={20}>
               <Switch>
                 <Route exact path="/">
-                  <MainStage
-                    onSelectSeat={(seatId) => {
-                      // console.log(`selected - ${seatId}`);
-                    }}
-                  />
+                  <MainStage />
                 </Route>
                 <Route path="/seats/new">
                   <div>new component will work here</div>
@@ -75,12 +65,6 @@ function App() {
           </Row>
         </Content>
       </Layout>
-      {/* Header and content code end */}
-
-      {/* <Sider className="right-sider">
-        <SeatsPosition />
-        <Categories />
-      </Sider> */}
     </Layout>
   );
 }
