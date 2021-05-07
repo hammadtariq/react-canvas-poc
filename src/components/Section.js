@@ -1,6 +1,5 @@
 import React from "react";
 import { Rect, Group, Text } from "react-konva";
-import PropTypes from "prop-types";
 import SubSection from "./SubSection";
 
 import {
@@ -63,14 +62,14 @@ const Section = React.memo(
             />
           );
         })}
-        <Text
+        {/* <Text
           text={section.name}
           height={SECTION_TOP_PADDING}
           width={width}
           align="center"
           verticalAlign="middle"
           fontSize={20}
-        />
+        /> */}
       </Group>
     );
   }
