@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Layout, Row, Col } from "antd";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 
 import MainStage from "./components/MainStage";
@@ -50,11 +52,18 @@ function App() {
         >
           <Row gutter={16}>
             <Col className="gutter-row" span={20}>
-              <MainStage
-                onSelectSeat={(seatId) => {
-                  // console.log(`selected - ${seatId}`);
-                }}
-              />
+              <Switch>
+                <Route exact path="/">
+                  <MainStage
+                    onSelectSeat={(seatId) => {
+                      // console.log(`selected - ${seatId}`);
+                    }}
+                  />
+                </Route>
+                <Route path="/seats/new">
+                  <div>new component will work here</div>
+                </Route>
+              </Switch>
             </Col>
             <Col className="gutter-row right" span={4}>
               <div className="right-sider">

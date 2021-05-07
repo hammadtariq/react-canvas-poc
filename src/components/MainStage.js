@@ -17,9 +17,21 @@ import * as layout from "../utils/layout";
 import useFetch from "../hooks/useFetch";
 import usePosition from "../hooks/usePosition";
 import TestGrid from "./TestGrid";
+import GridCircle from "./GridCircle";
+
+const generateMatrix = (xAxis = 30, yAxis = 30, width = 300, height = 600) => {
+  const temp = [];
+  for (let x = xAxis; x < width; x += 30) {
+    for (let y = yAxis; y < height; y += 30) {
+      temp.push(`0.9,0,0,0.9,${x},${y}`);
+    }
+  }
+  return temp;
+};
 
 const MainStage = () => {
   const jsonData = useFetch("./seats-data.json");
+  const [circles, setCircles] = useState([]);
   const containerRef = useRef(null);
   const stageRef = useRef(null);
   const trRef = useRef(null);
@@ -112,12 +124,21 @@ const MainStage = () => {
 
       x2 = stage.getPointerPosition().x;
       y2 = stage.getPointerPosition().y;
+      const x = Math.min(x1, x2);
+      const y = Math.min(y1, y2);
+      const width = Math.abs(x2 - x1);
+      const height = Math.abs(y2 - y1);
       selectionRectangle.setAttrs({
-        x: Math.min(x1, x2),
-        y: Math.min(y1, y2),
-        width: Math.abs(x2 - x1),
-        height: Math.abs(y2 - y1),
+        x,
+        y,
+        width,
+        height,
       });
+
+      // const newCircles = generateMatrix(x, y, width, height);
+      // const updatedCircles = [...circles, ...newCircles];
+      // // console.log("UPDATED CIRCLES:: ", circles, updatedCircles);
+      // setCircles(updatedCircles);
       layer.batchDraw();
     });
 
@@ -143,8 +164,6 @@ const MainStage = () => {
   };
 
   useEffect(() => {
-    // re-run this effect on the change of categories selection,
-    // and change the color for selected seats that are in the state
     const newNodes = [];
     if (trRef.current) {
       trRef.current.nodes().forEach((node) => {
@@ -278,13 +297,22 @@ const MainStage = () => {
         <Layer ref={layerRef}>
           {renderSections()}
           <Rect
-            fill="rgba(255,0,0,0.5)"
+            fill="rgba(173, 198, 255, 0.5)"
             ref={selectionRectangleRef}
             setZIndex={5}
           />
           <Transformer ref={trRef} />
         </Layer>
-        <TestGrid />
+        {/* <TestGrid /> */}
+
+        {/* <Layer>
+          {circles.map(
+            (circle, i) => (
+              // circle.map((t) => {
+              <GridCircle transformData={circle} />
+            ) // })
+          )}
+        </Layer> */}
       </Stage>
       {/* draw popup as html */}
       {popup.seat && (
