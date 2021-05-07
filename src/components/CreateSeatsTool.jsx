@@ -12,7 +12,8 @@ const generateMatrix = (xAxis = 30, yAxis = 30, width = 300, height = 600) => {
   const temp = [];
   for (let x = xAxis; x < width; x += 15) {
     for (let y = yAxis; y < height; y += 15) {
-      temp.push(`0.9,0,0,0.9,${x},${y}`);
+      // temp.push(`0.9,0,0,0.9,${x},${y}`);
+      temp.push({ x, y });
     }
   }
   return temp;
