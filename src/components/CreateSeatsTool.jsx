@@ -166,7 +166,6 @@ const CreateSeatsTool = () => {
           {circles.map((circle) => (
             <GridCircle key={circle} transformData={circle} />
           ))}
-
           {existingCircles.map((circle) => (
             <GridCircle transformData={circle} />
           ))}
