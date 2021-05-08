@@ -3,6 +3,7 @@ import { useContext, useState } from "react";
 import { List, Badge, Menu, Dropdown, Input } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { Context as CategoriesContext } from "../context/CategoriesContext";
+import disabledIcon from "../images/disabled.svg";
 
 import "../styles/components/Categories.less";
 
@@ -24,10 +25,11 @@ const Categories = () => {
   };
 
   const handleChange = (value, id, key) => {
-    if (["title", "color"].includes(key)) {
+    if (["title", "color", "isWheelchair"].includes(key)) {
       const updatedCategories = categories.map((c) =>
         c.id === id ? { ...c, [key]: value } : c
       );
+      console.log(updatedCategories);
       updateCategories(updatedCategories);
     }
   };
@@ -72,7 +74,13 @@ const Categories = () => {
           >
             {!category.isEditable && (
               <>
-                <Badge color={category.color} count="" />
+                <Badge
+                  style={{ background: category.color }}
+                  // color={category.color}
+                  count={
+                    category.isWheelchair ? <img src={disabledIcon} /> : " "
+                  }
+                />
                 <List.Item.Meta title={<a>{category.title}</a>} />
                 <Dropdown trigger="click" overlay={menu} placement="bottomLeft">
                   <a
@@ -88,6 +96,17 @@ const Categories = () => {
             )}
             {category.isEditable && (
               <>
+                <img
+                  className={category.isWheelchair ? "wheel-icon" : " "}
+                  src={disabledIcon}
+                  onClick={() => {
+                    handleChange(
+                      !category.isWheelchair,
+                      category.id,
+                      "isWheelchair"
+                    );
+                  }}
+                />
                 <Input
                   className="color-input"
                   type="color"

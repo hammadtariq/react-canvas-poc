@@ -7,10 +7,15 @@
   .ant-list-item {
     padding: 8px 0;
   }
-  .ant-badge-status-dot {
-    top: -3px;
-    width: 16px;
-    height: 16px;
+  .ant-badge {
+    top: 0;
+    margin-right: 8px;
+    img {
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      padding: 4px;
+    }
   }
   .ant-dropdown-trigger {
     font-size: 16px;
@@ -19,11 +24,13 @@
     top: -4px;
   }
   .color-input {
-    width: 18px;
-    height: 16px !important;
+    width: 20px;
+    min-width: 20px;
+    height: 20px !important;
     padding: 0;
-    margin-right: 10px;
-    border-radius: 50%;
+    margin-right: 5px;
+    margin-left: 5px;
+    border-radius: 10px;
     -webkit-appearance: none;
     border: none;
     &::-webkit-color-swatch {
@@ -49,5 +56,8 @@
         margin-right: 8px;
       }
     }
+  }
+  .wheel-icon {
+    filter: grayscale(50%);
   }
 }

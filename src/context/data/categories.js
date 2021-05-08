@@ -5,6 +5,7 @@ export const categoryNames = {
   SILVER: "Silver",
   GOLD: "Gold",
   PLATINUM: "Platinum",
+  wheelchair: "wheelchair",
 };
 
 export const categories = [
@@ -14,6 +15,7 @@ export const categories = [
     color: "#cd7f32",
     isEditable: false,
     isActive: false,
+    isWheelchair: false,
   },
   {
     id: uniqId(),
@@ -21,6 +23,7 @@ export const categories = [
     color: "#C0C0C0",
     isEditable: false,
     isActive: false,
+    isWheelchair: false,
   },
   {
     id: uniqId(),
@@ -28,6 +31,7 @@ export const categories = [
     color: "#FFD700",
     isEditable: false,
     isActive: false,
+    isWheelchair: false,
   },
   {
     id: uniqId(),
@@ -35,5 +39,14 @@ export const categories = [
     color: "#E5E4E2",
     isEditable: false,
     isActive: false,
+    isWheelchair: false,
+  },
+  {
+    id: uniqId(),
+    title: categoryNames.wheelchair,
+    color: "pink",
+    isEditable: false,
+    isActive: false,
+    isWheelchair: true,
   },
 ];
