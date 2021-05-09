@@ -1,9 +1,11 @@
 /* eslint-disable no-param-reassign */
 import { useRef, useState, useEffect, useContext } from "react";
 import { Stage, Layer, Rect, Transformer } from "react-konva";
+import uniqId from "uniqid";
 import Konva from "konva";
 
 import { Context as ToolbarContext } from "../context/ToolbarContext";
+import { Context as CategoriesContext } from "../context/CategoriesContext";
 import usePosition from "../hooks/usePosition";
 import { TOOLS } from "../utils/constants";
 import GridCircle from "./GridCircle";
@@ -27,11 +29,14 @@ const CreateSeatsTool = () => {
 
   const transformerRef = useRef(null);
   const [circles, setCircles] = useState([]);
+  const [existingCircles, setExistingCircles] = useState([]);
+  const [forceRerender, forceRerenderComponent] = useState(null);
   const { state: toolbarState } = useContext(ToolbarContext);
+  const { state: categoriesState } = useContext(CategoriesContext);
   const { positions, setPositions } = usePosition();
 
-  const [existingCircles, setExistingCircles] = useState([]);
   const { activeTool } = toolbarState;
+  const { activeCategory } = categoriesState;
 
   useEffect(() => {
     setExistingCircles([...existingCircles, ...circles]);
@@ -113,7 +118,8 @@ const CreateSeatsTool = () => {
         width,
         height,
       });
-      setCircles(generateMatrix(x, y, width, height));
+      if (activeTool === TOOLS.CREAT)
+        setCircles(generateMatrix(x, y, width, height));
       layer.batchDraw();
     });
 
@@ -125,19 +131,21 @@ const CreateSeatsTool = () => {
       setTimeout(() => {
         selectionRectangle.visible(false);
         layer.batchDraw();
-        setCircles([]);
+        if (activeTool === TOOLS.CREAT) setCircles([]);
       });
 
-      // const shapes = stage.find(".rect").toArray();
-      // const box = selectionRectangle.getClientRect();
-      // const selected = shapes.filter((shape) =>
-      //   Konva.Util.haveIntersection(box, shape.getClientRect())
-      // );
-      // transformerRef.current.nodes(selected);
-      // setPositions(
-      //   constructPositionObject(transformerRef.current.getClientRect())
-      // );
-      // layer.batchDraw();
+      if (activeTool === TOOLS.SELECTION) {
+        const shapes = stage.find(".new-circle").toArray();
+        const box = selectionRectangle.getClientRect();
+        const selected = shapes.filter((shape) =>
+          Konva.Util.haveIntersection(box, shape.getClientRect())
+        );
+        transformerRef.current.nodes(selected);
+        setPositions(
+          constructPositionObject(transformerRef.current.getClientRect())
+        );
+        layer.batchDraw();
+      }
     });
   };
 
@@ -152,6 +160,19 @@ const CreateSeatsTool = () => {
     };
   }, [activeTool]);
 
+  useEffect(() => {
+    const newNodes = [];
+    if (transformerRef.current) {
+      transformerRef.current.nodes().forEach((node) => {
+        node.setAttrs({
+          fill: activeCategory.color,
+        });
+      });
+      transformerRef.current.nodes(newNodes);
+      forceRerenderComponent(uniqId());
+    }
+  }, [activeCategory]);
+
   return (
     <div
       style={{
@@ -164,10 +185,18 @@ const CreateSeatsTool = () => {
       <Stage ref={stageRef} width={2000} height={1000}>
         <Layer ref={layerRef}>
           {circles.map((circle) => (
-            <GridCircle key={circle} transformData={circle} />
+            <GridCircle
+              key={circle}
+              transformData={circle}
+              forceRerender={forceRerender}
+            />
           ))}
           {existingCircles.map((circle) => (
-            <GridCircle transformData={circle} />
+            <GridCircle
+              key={circle}
+              transformData={circle}
+              forceRerender={forceRerender}
+            />
           ))}
           <Rect
             fill="rgba(173, 198, 255, 0.5)"
