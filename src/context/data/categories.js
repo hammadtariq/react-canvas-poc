@@ -5,7 +5,7 @@ export const categoryNames = {
   SILVER: "Silver",
   GOLD: "Gold",
   PLATINUM: "Platinum",
-  wheelchair: "wheelchair",
+  WHEEL_CHAIR: "wheelchair",
 };
 
 export const categories = [
@@ -43,7 +43,7 @@ export const categories = [
   },
   {
     id: uniqId(),
-    title: categoryNames.wheelchair,
+    title: categoryNames.WHEEL_CHAIR,
     color: "pink",
     isEditable: false,
     isActive: false,

@@ -129,6 +129,8 @@ const CreateSeatsTool = () => {
       setTimeout(() => {
         if (activeTool === TOOLS.CREAT) {
           setCircles(generateMatrix(x1, y1, x2, y2));
+        } else if (activeTool === TOOLS.CREAT_LINEAR) {
+          setCircles(generateLinear(x1, y1, x2, y2));
         }
       }, 100);
       layer.batchDraw();

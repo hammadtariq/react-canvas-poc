@@ -29,7 +29,6 @@ const Categories = () => {
       const updatedCategories = categories.map((c) =>
         c.id === id ? { ...c, [key]: value } : c
       );
-      console.log(updatedCategories);
       updateCategories(updatedCategories);
     }
   };
