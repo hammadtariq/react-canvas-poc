@@ -128,9 +128,9 @@ const CreateSeatsTool = () => {
       });
       setTimeout(() => {
         if (activeTool === TOOLS.CREAT) {
-          setCircles(generateMatrix(x, y, width, height));
+          setCircles(generateMatrix(x1, y1, x2, y2));
         }
-      }, 50);
+      }, 100);
       layer.batchDraw();
     });
 
