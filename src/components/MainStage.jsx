@@ -146,8 +146,10 @@ const MainStage = () => {
         Konva.Util.haveIntersection(box, shape.getClientRect())
       );
       trRef.current.nodes(selected);
+
       setPositions(constructPositionObject(trRef.current.getClientRect()));
       layer.batchDraw();
+      forceRerenderComponent(uniqId());
     });
   };
 

@@ -38,6 +38,7 @@ const CreateSeatsTool = () => {
   const transformerRef = useRef(null);
   const [circles, setCircles] = useState([]);
   const [existingCircles, setExistingCircles] = useState([]);
+  const [showSaved, setShowSaved] = useState(false);
   const [forceRerender, forceRerenderComponent] = useState(null);
   const { state: toolbarState } = useContext(ToolbarContext);
   const { state: categoriesState } = useContext(CategoriesContext);
@@ -45,6 +46,19 @@ const CreateSeatsTool = () => {
 
   const { activeTool } = toolbarState;
   const { activeCategory } = categoriesState;
+
+  let storedPattern = JSON.parse(localStorage.getItem("savedPattern"));
+
+  if (storedPattern === null) storedPattern = [];
+
+  const saveThis = () => {
+    const combinedCircles = [...storedPattern, ...existingCircles];
+    localStorage.setItem("savedPattern", JSON.stringify(combinedCircles));
+  };
+
+  const showThis = () => {
+    setShowSaved(!showSaved);
+  };
 
   useEffect(() => {
     setExistingCircles([...existingCircles, ...circles]);
@@ -128,9 +142,11 @@ const CreateSeatsTool = () => {
       });
       setTimeout(() => {
         if (activeTool === TOOLS.CREAT) {
-          setCircles(generateMatrix(x, y, width, height));
+          setCircles(generateMatrix(x1, y1, x2, y2));
+        } else if (activeTool === TOOLS.CREAT_LINEAR) {
+          setCircles(generateLinear(x1, y1, x2, y2));
         }
-      }, 50);
+      }, 100);
       layer.batchDraw();
     });
 
@@ -193,6 +209,12 @@ const CreateSeatsTool = () => {
       }}
       ref={containerRef}
     >
+      <button type="button" onClick={() => saveThis()}>
+        Save
+      </button>
+      <button type="button" onClick={() => showThis()}>
+        Show
+      </button>
       <Stage ref={stageRef} width={2000} height={1000}>
         <Layer ref={layerRef}>
           {circles.map((circle) => (
@@ -209,6 +231,14 @@ const CreateSeatsTool = () => {
               forceRerender={forceRerender}
             />
           ))}
+          {showSaved &&
+            storedPattern.map((circle, index) => (
+              <GridCircle
+                key={index}
+                transformData={circle}
+                forceRerender={forceRerender}
+              />
+            ))}
           <Rect
             fill="rgba(173, 198, 255, 0.5)"
             ref={selectionRectangleRef}
