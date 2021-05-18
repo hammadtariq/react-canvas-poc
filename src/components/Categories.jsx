@@ -9,9 +9,8 @@ import "../styles/components/Categories.less";
 
 const Categories = () => {
   const [activeCategoryId, setActiveCategoryId] = useState();
-  const { state, addCategory, setCategory, updateCategories } = useContext(
-    CategoriesContext
-  );
+  const { state, addCategory, setCategory, updateCategories } =
+    useContext(CategoriesContext);
   const { categories } = state;
 
   const handleAddCategory = () => {
